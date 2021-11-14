@@ -305,4 +305,3 @@ uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel)  // channel might be 
     HAL_ADC_Stop(adc);
     return res;
 }
-
