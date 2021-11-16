@@ -1,4 +1,5 @@
-#define ULTRA_TEST
+//#define ULTRA_TEST
+#define SERVO_TEST
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -12,8 +13,19 @@ void start_TIM4() {
   TIM4->PSC |= 84-1;
 }
 
-uint16_t read_TIM4() {
+void start_TIM3() { //for servo
+  RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+  TIM3->CR1 |= 1;
+  TIM3->PSC |= 84-1;
+  //TIM3->ARR = 20000;
+}
+
+uint16_t read_TIM4() { //for ultrasonic
   return TIM4->CNT;
+}
+
+uint16_t read_TIM3() { //for servo
+  return TIM3->CNT;
 }
 
 int main(void)
@@ -40,6 +52,8 @@ int main(void)
     // PINS FOR THE ULTRASONIC SENSOR - THIS WAS A PAIN TO GET
     InitializePin(GPIOA, GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
     InitializePin(GPIOA, GPIO_PIN_11, GPIO_MODE_INPUT, GPIO_NOPULL, 0);
+
+    //InitializePin(GPIOA, GPIO_PIN_13, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
@@ -82,7 +96,7 @@ int main(void)
     while (true){                                  // May need to configure clock to les than milliescond
         uint16_t see1;
         see1 = 0;
-        see1 = uTickget();
+        see1 = read_TIM4();
 
         char try1[1000];
         sprintf(try1, "usec time: %u \n", see1);
@@ -146,8 +160,42 @@ int main(void)
     }
 
 #endif
+
+#ifdef SERVO_TEST
+    #define SIGNAL GPIO_PIN_13
+
+    uint16_t pulse_begin, pulse_now;
+
+    while(true){
+
+        char ret[100];
+        sprintf(ret, "value: %d \n", read_TIM4());
+        SerialPuts(ret);
+
+        
+ 
+        if(read_TIM3() <= 1500){
+            HAL_GPIO_WritePin(GPIOA, SIGNAL, true);
+
+            // char ret[100];
+            // sprintf(ret, "High: %d \n", read_TIM3());
+            // SerialPuts(ret);
+
+            //SerialPuts("High \n");
+            //SerialPuts(read_TIM3()+'0');
+
+        } else{
+            HAL_GPIO_WritePin(GPIOA, SIGNAL, false);
+            SerialPuts("Low \n");
+        }
+    }
+
+#endif
+
     return 0;
 }
+
+
 
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
