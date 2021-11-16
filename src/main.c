@@ -169,7 +169,7 @@ int main(void)
     while(true){
 
         char ret[100];
-        sprintf(ret, "value: %d \n", read_TIM4());
+        sprintf(ret, "value: %d \n", read_TIM3());
         SerialPuts(ret);
 
         
@@ -181,12 +181,9 @@ int main(void)
             // sprintf(ret, "High: %d \n", read_TIM3());
             // SerialPuts(ret);
 
-            //SerialPuts("High \n");
-            //SerialPuts(read_TIM3()+'0');
-
         } else{
             HAL_GPIO_WritePin(GPIOA, SIGNAL, false);
-            SerialPuts("Low \n");
+            //SerialPuts("Low \n");
         }
     }
 
