@@ -17,7 +17,7 @@ void start_TIM3() { //for servo
   RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
   TIM3->CR1 |= 1;
   TIM3->PSC |= 84-1;
-  //TIM3->ARR = 20000;
+  TIM3->ARR = 20000;
 }
 
 uint16_t read_TIM4() { //for ultrasonic
@@ -63,6 +63,9 @@ int main(void)
     HAL_Delay(4500);
 
     SerialPuts("Yo board is live. \n");
+
+    start_TIM4();
+    start_TIM3();
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
