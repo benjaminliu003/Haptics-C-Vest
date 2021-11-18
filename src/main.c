@@ -1,4 +1,5 @@
-#define ULTRA_TEST
+#define TIMER_TEST
+//#define ULTRA_TEST
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -9,7 +10,7 @@
 void start_TIM4() {
   RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
   TIM4->CR1 |= 1;
-  TIM4->PSC |= 84-1;
+  TIM4->PSC |= 84;
 }
 
 uint16_t read_TIM4() {
@@ -26,6 +27,8 @@ int main(void)
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
+
+    //__HAL_RCC_TIM4_CLK_ENABLE();
 
     // initialize the pins to be input, output, alternate function, etc...
 
@@ -50,8 +53,22 @@ int main(void)
 
     SerialPuts("Yo board is live. \n");
 
+    start_TIM4();
+
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+#ifdef TIMER_TEST
+    while(true){
+        uint16_t see1;
+        see1 = read_TIM4();
+
+        char try1[1000];
+        sprintf(try1, "usec time: %u \n", see1);
+        SerialPuts(try1);
+    }
+
+#endif
+
 
 #ifdef ULTRA_TEST
     #define SEN_TRIG GPIO_PIN_6
@@ -81,8 +98,7 @@ int main(void)
 
     while (true){                                  // May need to configure clock to les than milliescond
         uint16_t see1;
-        see1 = 0;
-        see1 = uTickget();
+        see1 = read_TIM4();
 
         char try1[1000];
         sprintf(try1, "usec time: %u \n", see1);
