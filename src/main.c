@@ -65,6 +65,10 @@ int main(void)
         char try1[1000];
         sprintf(try1, "usec time: %u \n", see1);
         SerialPuts(try1);
+
+        if(see1){
+            HAL_IncTick();
+        }
     }
 
 #endif
@@ -166,8 +170,11 @@ int main(void)
 }
 
 // This function is called by the HAL once every millisecond
+
+/*
 void SysTick_Handler(void)
 {
     HAL_IncTick(); // tell HAL that a new tick has happened
     // we can do other things in here too if we need to, but be careful
 }
+*/
