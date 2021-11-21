@@ -104,10 +104,12 @@ int main(void)
             if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
                 char try2[100];
                 sprintf(try2, "Noise \n");
+                SerialPuts(try2);
             }
             else if ((read_len > 37500) && (read_len < 38500)){
                 char try3[100];
                 sprintf(try3, "No Obstacle \n");
+                SerialPuts(try3);
             }
             else if ((read_len > 149) && (read_len < 25001)){
                 uint16_t rng = read_len / 12;
