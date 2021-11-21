@@ -1,5 +1,5 @@
-#define TIMER_TEST
-//#define ULTRA_TEST
+//#define TIMER_TEST
+#define ULTRA_TEST_ITER2
 
 
 #include <stdbool.h> // booleans, i.e. true and false
@@ -35,6 +35,8 @@ int main(void)
     // PINS FOR THE ULTRASONIC SENSOR - THIS WAS A PAIN TO GET
     InitializePin(GPIOA, GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
     InitializePin(GPIOA, GPIO_PIN_11, GPIO_MODE_INPUT, GPIO_NOPULL, 0);
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, 0);
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
@@ -75,6 +77,25 @@ int main(void)
 
 #endif
 
+#ifdef ULTRA_TEST_ITER2
+    #define SEN_TRIG GPIO_PIN_6
+    #define SEN_ECHO GPIO_PIN_11
+
+    uint16_t micros_trig;
+    micros_trig = 10;
+
+    HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
+    delay_us(micros_trig);
+    HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
+
+    while (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11));
+    while (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11)){
+        char try2[1000];
+        sprintf(try2, "got reading");
+        SerialPuts(try2);
+    }
+
+#endif
 
 #ifdef ULTRA_TEST
     #define SEN_TRIG GPIO_PIN_6
