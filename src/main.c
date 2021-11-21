@@ -81,19 +81,43 @@ int main(void)
     #define SEN_TRIG GPIO_PIN_6
     #define SEN_ECHO GPIO_PIN_11
 
-    uint16_t micros_trig;
+    uint16_t micros_trig, read_len;
     micros_trig = 10;
 
-    HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
-    delay_us(micros_trig);
-    HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
+    while (true){
+        read_len = 0;
+        bool started = false;
 
-    while (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11));
-    while (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11)){
-        char try2[1000];
-        sprintf(try2, "got reading");
-        SerialPuts(try2);
+        HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
+        delay_us(micros_trig);
+        HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
+
+        while (!HAL_GPIO_ReadPin(GPIOA, SEN_ECHO));      //32613?
+        while (HAL_GPIO_ReadPin(GPIOA, SEN_ECHO)){
+            if (started == false){
+                TIM4->CNT = 0;
+                started = true;
+            }
+            read_len = read_TIM4();
+        }
+        if(started == true){
+            if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
+                char try2[100];
+                sprintf(try2, "Noise \n");
+            }
+            else if ((read_len > 37500) && (read_len < 38500)){
+                char try3[100];
+                sprintf(try3, "No Obstacle \n");
+            }
+            else{
+                double rng = read_len / 58;
+                char try4[1000];
+                sprintf(try4, "got reading: %f cm \n", rng);
+                SerialPuts(try4);
+            }
+        }
     }
+
 
 #endif
 
