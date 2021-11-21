@@ -110,11 +110,12 @@ int main(void)
                 sprintf(try3, "No Obstacle \n");
             }
             else if ((read_len > 149) && (read_len < 25001)){
-                double rng = read_len / 58;
+                uint16_t rng = read_len / 12;
                 char try4[1000];
-                sprintf(try4, "got reading: %u micros \n", read_len);
+                sprintf(try4, "Range of: %u cm \n", rng);
                 SerialPuts(try4);
-            }
+              //also if rng over 400, ignore
+            } // set up system to compare current and last measrement, if change drastic, ignore.
         }    
     }
 
