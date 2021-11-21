@@ -1,21 +1,13 @@
 #define TIMER_TEST
 //#define ULTRA_TEST
 
+
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 
 #include "ece198.h"
-
-void start_TIM4() {
-  RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
-  TIM4->CR1 |= 1;
-  TIM4->PSC |= 84;
-}
-
-uint16_t read_TIM4() {
-  return TIM4->CNT;
-}
+#include "timer_config.h"
 
 int main(void)
 {
@@ -57,18 +49,28 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+
 #ifdef TIMER_TEST
+    uint16_t see1, microdelay, ticks;
+    see1 = 0;
+    ticks = 0;
+    microdelay = 65000;
+
     while(true){
-        uint16_t see1;
-        see1 = read_TIM4();
+        for (int j = 0; j < 17; ++j){
+            delay_us(microdelay);
+            ++see1;
+        }
 
         char try1[1000];
-        sprintf(try1, "usec time: %u \n", see1);
+        sprintf(try1, "delay loop iters: %u \n", see1);
         SerialPuts(try1);
 
-        if(see1){
-            HAL_IncTick();
-        }
+        ticks = HAL_GetTick();
+
+        char try2[1000];
+        sprintf(try2, "hal ticks: %u \n", ticks);
+        SerialPuts(try2);
     }
 
 #endif
@@ -171,10 +173,9 @@ int main(void)
 
 // This function is called by the HAL once every millisecond
 
-/*
+
 void SysTick_Handler(void)
 {
     HAL_IncTick(); // tell HAL that a new tick has happened
     // we can do other things in here too if we need to, but be careful
 }
-*/

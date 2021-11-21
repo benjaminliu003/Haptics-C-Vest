@@ -122,24 +122,6 @@ void SerialGets(char *buff, int maxlen)
     }
 }
 
-////////////////////
-// Rotary Encoder //
-////////////////////
-
-// read a rotary encoder (handles the quadrature encoding)
-//(uses a previousClk boolean variable provided by the caller)
-
-int ReadEncoder(GPIO_TypeDef *clkport, int clkpin, GPIO_TypeDef *dtport, int dtpin, bool *previousClk)
-{
-    bool clk = HAL_GPIO_ReadPin(clkport, clkpin);
-    bool dt = HAL_GPIO_ReadPin(dtport, dtpin);
-    int result = 0;  // default to zero if encoder hasn't moved
-    if (clk != *previousClk)           // if the clk signal has changed since last time we were called...
-        result = dt != clk ? 1 : -1;   // set the result to the direction (-1 if clk == dt, 1 if they differ)
-    *previousClk = clk;                // store for next time
-    return result;
-}
-
 ////////////////////////////
 // Pulse Width Modulation //
 ////////////////////////////
@@ -189,81 +171,6 @@ void SetPWMDutyCycle(TIM_HandleTypeDef *timer, uint32_t channel, uint32_t value)
         timer->Instance->CCR4 = value;
         break;
     }
-}
-
-/////////////////////
-// Keypad Scanning //
-/////////////////////
-
-struct { GPIO_TypeDef *port; uint32_t pin; }
-rows[] = {
-    { GPIOC, GPIO_PIN_7 },
-    { GPIOA, GPIO_PIN_9 },
-    { GPIOA, GPIO_PIN_8 },
-    { GPIOB, GPIO_PIN_10 }
-},
-cols[] = {
-    { GPIOB, GPIO_PIN_4 },
-    { GPIOB, GPIO_PIN_5 },
-    { GPIOB, GPIO_PIN_3 },
-    { GPIOA, GPIO_PIN_10 }
-};
-
-void InitializeKeypad() {
-    // rows are outputs, columns are inputs and are pulled low so they don't "float"
-    for (int i = 0; i < 4; ++i) {
-        InitializePin(rows[i].port, rows[i].pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
-        InitializePin(cols[i].port, cols[i].pin, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);
-     }
-}
-
-int ReadKeypad() {
-    // scan a 4x4 key matrix by applying a voltage to each row in succession and seeing which column is active
-    // (should work with a 4x3 matrix, since last column will just return zero)
-    for (int row = 0; row < 4; ++row) {
-        // enable the pin for (only) this row
-        for (int i = 0; i < 4; ++i)
-            HAL_GPIO_WritePin(rows[i].port, rows[i].pin, i == row);  // all low except the row we care about
-        for (int col = 0; col < 4; ++col)  // check all the column pins to see if any are high
-            if (HAL_GPIO_ReadPin(cols[col].port, cols[col].pin))
-                return row*4+col;
-    }
-    return -1;  // none of the keys were pressed
-}
-
-///////////////////////
-// 7-Segment Display //
-///////////////////////
-
-struct { GPIO_TypeDef *port; uint32_t pin; }
-segments[] = {
-    { GPIOA, GPIO_PIN_0 },  // A
-    { GPIOA, GPIO_PIN_1 },  // B
-    { GPIOA, GPIO_PIN_4 },  // C
-    { GPIOB, GPIO_PIN_0 },  // D
-    { GPIOC, GPIO_PIN_1 },  // E
-    { GPIOC, GPIO_PIN_0 },  // F
-    { GPIOB, GPIO_PIN_8 },  // G
-    { GPIOB, GPIO_PIN_9 },  // H (also called DP)
-};
-
-// for each digit, we have a byte (uint8_t) which stores which segments are on and off
-// (bits are ABCDEFGH, right to left, so the low-order bit is segment A)
-uint8_t digitmap[10] = { 0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7C, 0x07, 0x7F, 0x67 };
-
-void Initialize7Segment() {
-    for (int i = 0; i < 8; ++i)
-        InitializePin(segments[i].port, segments[i].pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
-}
-
-void Display7Segment(int digit) {
-    int value = 0;  // by default, don't turn on any segments
-    if (digit >= 0 && digit <= 9)  // see if it's a valid digit
-        value = digitmap[digit];   // convert digit to a byte which specifies which segments are on
-    //value = ~value;   // uncomment this line for common-anode displays
-    // go through the segments, turning them on or off depending on the corresponding bit
-    for (int i = 0; i < 8; ++i)
-        HAL_GPIO_WritePin(segments[i].port, segments[i].pin, (value >> i) & 0x01);  // move bit into bottom position and isolate it
 }
 
 /////////
