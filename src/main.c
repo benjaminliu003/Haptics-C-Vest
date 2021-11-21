@@ -109,15 +109,14 @@ int main(void)
                 char try3[100];
                 sprintf(try3, "No Obstacle \n");
             }
-            else{
+            else if ((read_len > 149) && (read_len < 25001)){
                 double rng = read_len / 58;
                 char try4[1000];
-                sprintf(try4, "got reading: %f cm \n", rng);
+                sprintf(try4, "got reading: %u micros \n", read_len);
                 SerialPuts(try4);
             }
-        }
+        }    
     }
-
 
 #endif
 
