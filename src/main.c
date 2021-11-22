@@ -1,13 +1,11 @@
-//#define TIMER_TEST
-#define ULTRA_TEST_ITER2
-
-
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 
 #include "ece198.h"
 #include "timer_config.h"
+
+#include "ultra_config.h"
 
 int main(void)
 {
@@ -52,177 +50,10 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
-#ifdef TIMER_TEST
-    uint16_t see1, microdelay, ticks;
-    see1 = 0;
-    ticks = 0;
-    microdelay = 65000;
-
-    while(true){
-        for (int j = 0; j < 17; ++j){
-            delay_us(microdelay);
-            ++see1;
-        }
-
-        char try1[1000];
-        sprintf(try1, "delay loop iters: %u \n", see1);
-        SerialPuts(try1);
-
-        ticks = HAL_GetTick();
-
-        char try2[1000];
-        sprintf(try2, "hal ticks: %u \n", ticks);
-        SerialPuts(try2);
-    }
-
-#endif
-
-#ifdef ULTRA_TEST_ITER2
-    #define SEN_TRIG GPIO_PIN_6
-    #define SEN_ECHO GPIO_PIN_11
-
-    uint16_t micros_trig, read_len;
-    micros_trig = 10;
-
-    while (true){
-        read_len = 0;
-        bool started = false;
-
-        HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
-        delay_us(micros_trig);
-        HAL_GPIO_TogglePin(GPIOA,SEN_TRIG);
-
-        while (!HAL_GPIO_ReadPin(GPIOA, SEN_ECHO));      //32613?
-        while (HAL_GPIO_ReadPin(GPIOA, SEN_ECHO)){
-            if (started == false){
-                TIM4->CNT = 0;
-                started = true;
-            }
-            read_len = read_TIM4();
-        }
-        if(started == true){
-            if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
-                char try2[100];
-                sprintf(try2, "Noise \n");
-                SerialPuts(try2);
-            }
-            else if ((read_len > 37500) && (read_len < 38500)){
-                char try3[100];
-                sprintf(try3, "No Obstacle \n");
-                SerialPuts(try3);
-            }
-            else if ((read_len > 149) && (read_len < 25001)){
-                uint16_t rng = read_len / 12;
-                char try4[1000];
-                sprintf(try4, "Range of: %u cm \n", rng);
-                SerialPuts(try4);
-              //also if rng over 400, ignore
-            } // set up system to compare current and last measrement, if change drastic, ignore.
-        }    
-    }
-
-#endif
-
-#ifdef ULTRA_TEST
-    #define SEN_TRIG GPIO_PIN_6
-    #define SEN_ECHO GPIO_PIN_11
-
-    // Hey HAL 9000, is it time to check the time?
-    bool state, rec_strt, found;
-    state = false;
-    rec_strt = false;
-    found = false;
-
-    // Bois, how far have we gone?
-    uint16_t iters;
-    double distance;
-    iters = 1;
-    distance = 0.0;
-
-    // It is exactly [time] o'clock! bUt is it time for use to grab dist?
-    uint32_t time, time1, waitTime, bruhTime, yesTime, recTime;
-    time = 0;
-    time1 = 0;
-    bruhTime = 0;
-    yesTime = 0;
-    recTime = 0;
-    waitTime = 0;
-
-
-    while (true){                                  // May need to configure clock to les than milliescond
-        uint16_t see1;
-        see1 = read_TIM4();
-
-        char try1[1000];
-        sprintf(try1, "usec time: %u \n", see1);
-        SerialPuts(try1);
-
-        if(state == false){
-            time = HAL_GetTick();                   // update this as well to keep trying to obtain 10 usec?
-            state = true;
-            char howLong[1000];
-            sprintf(howLong, "When First: %lu \n", time);
-            SerialPuts(howLong);
-
-            SerialPuts("Got initial time. \n");
-        }
-        if ((time1 - time) >= 10){
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, false);
-            state = false;
-
-            //add wait time and then time to grab dist?
-            waitTime = HAL_GetTick();
-            SerialPuts("Got first wait time. \n");
-
-            while (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11)){
-                bruhTime = HAL_GetTick();
-                if ((bruhTime - waitTime) >= 9900){
-                    //ha, sensor borked
-                    SerialPuts("uh oh, sensor no workie! \n");
-                }
-            }
-            while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11)){
-                if(rec_strt == false){
-                    recTime = HAL_GetTick();
-                    rec_strt = true;
-                    SerialPuts("Recording time is got. \n");
-                }
-                yesTime = HAL_GetTick() - recTime;
-                
-                distance = yesTime /* divide yesTime by some const given timer */;
-
-                found = true;
-                SerialPuts("Found the distance. \n");
-            }
-            if (found == true){
-                char ret[100];
-                sprintf(ret, "distance: %f \n", distance);
-                SerialPuts(ret);
-            }
-        }
-        else{
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, true);
-            time1 = HAL_GetTick();
-            SerialPuts("Getting time1. \n");
-        }
-        char howMany[1000];
-        sprintf(howMany, "cycle: %u \n", iters);
-        SerialPuts(howMany);
-
-        ++iters;
-        rec_strt = false;
-        SerialPuts("Iteration. \n");
-    }
-
-#endif
     return 0;
 }
 
-// This function is called by the HAL once every millisecond
-
-
 void SysTick_Handler(void)
 {
-    HAL_IncTick(); // tell HAL that a new tick has happened
-    // we can do other things in here too if we need to, but be careful
+    HAL_IncTick();
 }
