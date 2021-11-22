@@ -1,5 +1,6 @@
 #include "ultra_config.h"
 #include "timer_config.h"
+#include "ece198.h"
 
 #include <stdbool.h>
 #include <stdio.h>
