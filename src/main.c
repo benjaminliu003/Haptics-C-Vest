@@ -5,7 +5,11 @@
 #include "ece198.h"
 #include "timer_config.h"
 
+// if return 1 - no obstacle, if return 0 - error, if return other - good read
 #include "ultra_config.h"
+#include "servo_config.h"
+
+#define RUNTIME
 
 int main(void)
 {
@@ -49,6 +53,26 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+
+#ifdef RUNTIME
+    while (true){
+        uint16_t ranged = find_range(GPIOA, GPIO_PIN_6, GPIO_PIN_11);
+        if (ranged == 0){
+            break;
+        }
+        else if (ranged == 1){
+            char wut[1000];
+            sprintf(wut, "NO OBSTACLE");
+            SerialPuts(wut);
+        }else{
+            poke_user(GPIOA, GPIO_PIN_14, ranged);
+        }
+    }
+    char err1[1000];
+    sprintf(err1, "READ ERROR");
+    SerialPuts(err1);
+    
+#endif
 
     return 0;
 }
