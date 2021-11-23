@@ -55,22 +55,34 @@ int main(void)
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
 #ifdef RUNTIME
+    start_TIM2();
+    InitializePin(GPIOA, GPIO_PIN_13, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+    
+    while (true){
+        TIM2->CCR1 = 25;
+        HAL_Delay(2000);
+        TIM2->CCR1 = 75;
+        HAL_Delay(2000);
+        TIM2->CCR1 = 125;
+        HAL_Delay(2000);
+    }
+
+    /*
     while (true){
         uint16_t ranged = find_range(GPIOA, GPIO_PIN_6, GPIO_PIN_11);
         if (ranged == 0){
-            break;
+            char err1[1000];
+            sprintf(err1, "READ ERROR \n");
+            SerialPuts(err1);
         }
         else if (ranged == 1){
             char wut[1000];
-            sprintf(wut, "NO OBSTACLE");
+            sprintf(wut, "NO OBSTACLE \n");
             SerialPuts(wut);
         }else{
-            poke_user(GPIOA, GPIO_PIN_14, ranged);
+            poke_user(GPIOA, GPIO_PIN_13, ranged);
         }
-    }
-    char err1[1000];
-    sprintf(err1, "READ ERROR");
-    SerialPuts(err1);
+    }*/
     
 #endif
 

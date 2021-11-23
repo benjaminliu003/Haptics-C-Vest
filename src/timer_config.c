@@ -8,12 +8,13 @@ void start_TIM4() {
   TIM4->CNT = 0;
 }
 
-void start_TIM3() {
-  RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
-  TIM3->CR1 |= 1;
-  TIM3->PSC |= 84;
-  TIM3->ARR |= 65000;
-  TIM3->CNT = 0;
+void start_TIM2() {
+  //RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+  TIM2->CR1 |= 1;
+  TIM2->PSC |= 160;
+  TIM2->ARR |= 1000;
+  TIM2->CNT = 0;
+  HAL_TIM_PWM_Start(TIM2, TIM_CHANNEL_1);
 }
 
 uint16_t read_TIM4() {
