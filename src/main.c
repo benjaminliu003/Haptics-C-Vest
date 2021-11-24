@@ -22,23 +22,9 @@ int main(void)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
 
-    //__HAL_RCC_TIM4_CLK_ENABLE();
-
     // initialize the pins to be input, output, alternate function, etc...
 
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
-
-    // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
-    // is required, since there's one on the board)
-
-    // USE THIS FOR TESTING THE ULTRASONIC SENSOR AND PINOUTS - No touchie touchie
-    // Timer init
-
-    // PINS FOR THE ULTRASONIC SENSOR - THIS WAS A PAIN TO GET
-    InitializePin(GPIOA, GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
-    InitializePin(GPIOA, GPIO_PIN_11, GPIO_MODE_INPUT, GPIO_NOPULL, 0);
-
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, 0);
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
@@ -57,8 +43,7 @@ int main(void)
 #ifdef RUNTIME
     start_TIM2();
     
-    /*
-    while (true){
+    /*while (true){
         TIM2->CCR1 = 350; //lowest range
         HAL_Delay(2000);
         TIM2->CCR1 = 500; //highest range
@@ -66,7 +51,7 @@ int main(void)
     }*/
 
     while (true){
-        uint16_t ranged = find_range(GPIOA, GPIO_PIN_6, GPIO_PIN_11);
+        uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_6, GPIO_PIN_11);
         if (ranged == 0){
             char err1[1000];
             sprintf(err1, "READ ERROR \n");

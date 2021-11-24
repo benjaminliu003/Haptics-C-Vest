@@ -6,9 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-uint16_t find_range(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t Pin_Echo){
+uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_ECHO,uint16_t Pin_Trig, uint16_t Pin_Echo){
     #define SEN_TRIG Pin_Trig
     #define SEN_ECHO Pin_Echo
+
+    InitializePin(Port_Letter_TRIG, Pin_Trig, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
+    InitializePin(Port_Letter_ECHO, Pin_Echo, GPIO_MODE_INPUT, GPIO_NOPULL, 0);
+
+    HAL_GPIO_WritePin(Port_Letter_TRIG, Pin_Trig, 0);
 
     uint16_t micros_trig, read_len;
     micros_trig = 10;
@@ -16,12 +21,12 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t Pin_E
     read_len = 0;
     bool started = false;
 
-    HAL_GPIO_TogglePin(Port_Letter,SEN_TRIG);
+    HAL_GPIO_TogglePin(Port_Letter_TRIG,SEN_TRIG);
     delay_us(micros_trig);
-    HAL_GPIO_TogglePin(Port_Letter,SEN_TRIG);
+    HAL_GPIO_TogglePin(Port_Letter_TRIG,SEN_TRIG);
 
-    while (!HAL_GPIO_ReadPin(Port_Letter, SEN_ECHO));      //32613?
-    while (HAL_GPIO_ReadPin(Port_Letter, SEN_ECHO)){
+    while (!HAL_GPIO_ReadPin(Port_Letter_ECHO, SEN_ECHO));      //32613?
+    while (HAL_GPIO_ReadPin(Port_Letter_ECHO, SEN_ECHO)){
         if (started == false){
             TIM4->CNT = 0;
             started = true;
@@ -30,15 +35,15 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t Pin_E
     }
     if(started == true){
         if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
-            char try2[100];
-            sprintf(try2, "Noise \n");
-            SerialPuts(try2);
+            // char try2[100];
+            // sprintf(try2, "Noise \n");
+            // SerialPuts(try2);
             return 0;
         }
         else if ((read_len > 37500) && (read_len < 38500)){
-            char try3[100];
-            sprintf(try3, "No Obstacle \n");
-            SerialPuts(try3);
+            // char try3[100];
+            // sprintf(try3, "No Obstacle \n");
+            // SerialPuts(try3);
             return 1;
         }
         else if ((read_len > 149) && (read_len < 25001)){
@@ -46,9 +51,9 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t Pin_E
             uint16_t rng = rang;
             
             if (rng > 400){
-                char try5[1000];
-                sprintf(try5, "Too Far! \n");
-                SerialPuts(try5);
+                // char try5[1000];
+                // sprintf(try5, "Too Far! \n");
+                // SerialPuts(try5);
                 return 0;
             }
 
