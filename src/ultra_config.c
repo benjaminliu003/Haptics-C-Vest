@@ -42,13 +42,21 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t Pin_E
             return 1;
         }
         else if ((read_len > 149) && (read_len < 25001)){
-            uint16_t rng = read_len / 12;
+            double rang = (read_len * 3.43) / 34.3;
+            uint16_t rng = rang;
+            
+            if (rng > 400){
+                char try5[1000];
+                sprintf(try5, "Too Far! \n");
+                SerialPuts(try5);
+                return 0;
+            }
+
             char try4[1000];
             sprintf(try4, "Range of: %u cm \n", rng);
             SerialPuts(try4);
             return rng;
-            //also if rng over 400, ignore
-        } // set up system to compare current and last measrement, if change drastic, ignore.
+        }  // set up system to compare current and last measrement, if change drastic, ignore.
         return 0;
     }
     return 0;
