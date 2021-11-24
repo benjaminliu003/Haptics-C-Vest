@@ -64,9 +64,9 @@ int main(void)
     InitializePin(GPIOA, GPIO_PIN_15, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
     
     while (true){
-        TIM2->CCR1 = 250;
+        TIM2->CCR1 = 350; //lowest range
         HAL_Delay(2000);
-        TIM2->CCR1 = 500;
+        TIM2->CCR1 = 500; //highest range
         HAL_Delay(2000);
     }
 
