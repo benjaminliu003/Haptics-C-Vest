@@ -7,16 +7,16 @@ void start_TIM4() {
   TIM4->ARR |= 65000;
   TIM4->CNT = 0;
 }
-
+/*
 void start_TIM2() {
-  //RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+  RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
   TIM2->CR1 |= 1;
-  TIM2->PSC |= 160;
-  TIM2->ARR |= 1000;
+  TIM2->PSC |= 84;
+  TIM2->ARR |= 20000;
   TIM2->CNT = 0;
   HAL_TIM_PWM_Start(TIM2, TIM_CHANNEL_1);
 }
-
+*/
 uint16_t read_TIM4() {
   return TIM4->CNT;
 }

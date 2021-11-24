@@ -55,15 +55,18 @@ int main(void)
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
 #ifdef RUNTIME
-    start_TIM2();
-    InitializePin(GPIOA, GPIO_PIN_13, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+    uint16_t period = 20000, prescale = 84;
+
+    __TIM2_CLK_ENABLE();  // enable timer 2
+    TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
+    InitializePWMTimer(&pwmTimerInstance, TIM2, period, prescale);   // initialize the timer instance
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
+    InitializePin(GPIOA, GPIO_PIN_15, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
     
     while (true){
-        TIM2->CCR1 = 25;
+        TIM2->CCR1 = 250;
         HAL_Delay(2000);
-        TIM2->CCR1 = 75;
-        HAL_Delay(2000);
-        TIM2->CCR1 = 125;
+        TIM2->CCR1 = 500;
         HAL_Delay(2000);
     }
 
