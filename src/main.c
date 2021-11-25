@@ -88,21 +88,20 @@ int main(void)
         TIM2->CCR1 = 500; //highest range
         HAL_Delay(2000);
     }*/
-
+    /*
     while (true)
     {
-        //uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_0, GPIO_PIN_3); // SEN 1 readings borked
-        //uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_1, GPIO_PIN_2); // SEN 2 WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOH, GPIO_PIN_4, GPIO_PIN_1); // SEN 3 DEAD
-        //uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_10, GPIO_PIN_11); // SEN 4 WORKS - USE THIS FOR TESTING
-        //uint16_t ranged = find_range(GPIOD, GPIOC, GPIO_PIN_2, GPIO_PIN_12); //SEN 5 WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_13, GPIO_PIN_14); //SEN 6 WORKS
-        //uint16_t ranged = find_range(GPIOC, GPIOH, GPIO_PIN_15, GPIO_PIN_0); //SEN 7 readings borked
-        //uint16_t ranged = find_range(GPIOA, GPIOC, GPIO_PIN_15, GPIO_PIN_14); //SEN 8 DEAD
-        //uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5); //SEN 9 WORKS 
-    }
+        uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_0, GPIO_PIN_3); // SEN 1 readings borked
+        uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_1, GPIO_PIN_2); // SEN 2 WORKS
+        uint16_t ranged = find_range(GPIOA, GPIOH, GPIO_PIN_4, GPIO_PIN_1); // SEN 3 DEAD
+        uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_10, GPIO_PIN_11); // SEN 4 WORKS - USE THIS FOR TESTING
+        uint16_t ranged = find_range(GPIOD, GPIOC, GPIO_PIN_2, GPIO_PIN_12); //SEN 5 WORKS
+        uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_13, GPIO_PIN_14); //SEN 6 WORKS
+        uint16_t ranged = find_range(GPIOC, GPIOH, GPIO_PIN_15, GPIO_PIN_0); //SEN 7 readings borked
+        uint16_t ranged = find_range(GPIOA, GPIOC, GPIO_PIN_15, GPIO_PIN_14); //SEN 8 DEAD
+        uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5); //SEN 9 WORKS 
+    }*/
     
-/*
     uint16_t i = 0;
 
     while (true){
@@ -157,7 +156,7 @@ int main(void)
             sprintf(err1, "Last \n");
             SerialPuts(err1);
         }        
-    }*/
+    }
     
 #endif
 
