@@ -30,8 +30,3 @@ void delay_us (uint16_t micros) {
 	TIM4->CNT = 0;  // set counter register value = 0
 	while (read_TIM4() < micros);  // wait for the counter to reach the microsec input in the parameter
 }
-
-/*
-void read_in (GPIO_TypeDef *port, uint16_t pin_num){
-    port.Pin = pin_num;
-}*/

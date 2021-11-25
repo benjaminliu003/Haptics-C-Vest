@@ -97,9 +97,9 @@ int main(void)
         }
         if (i == 8){
             i = 0;
-            char err1[1000];
-            sprintf(err1, "Last \n");
-            SerialPuts(err1);
+            char err2[1000];
+            sprintf(err2, "Last \n");
+            SerialPuts(err2);
         }        
     }
 #endif

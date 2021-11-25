@@ -16,7 +16,6 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
 
     uint16_t micros_trig, read_len;
     micros_trig = 10;
-
     read_len = 0;
     bool started = false;
 

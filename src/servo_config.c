@@ -19,9 +19,3 @@ void poke_user(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t dist_got){
 
     HAL_GPIO_DeInit(SER_PORT, SER_TRIG);
 }
-/*
-void DeInitPin(GPIO_TypeDef *Port_Letter, uint16_t pins){
-    GPIO_InitTypeDef GPIO_DeInit;
-    GPIO_DeInit.Pin = pins;
-    HAL_GPIO_DeInit(Port_Letter, &GPIO_DeInit);
-}*/
