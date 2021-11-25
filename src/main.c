@@ -9,6 +9,9 @@
 
 #define RUNTIME
 
+GPIO_TypeDef *Servo_Trig[9] = {};
+uint16_t Servp_Trig_Pin[9] = {};
+
 void debug_poke (uint16_t i, uint16_t range){
     if (range == 0){
             char err1[1000];
@@ -21,32 +24,8 @@ void debug_poke (uint16_t i, uint16_t range){
         SerialPuts(wut);
     }
     else{ //REMEBER TO PUT IN NEW PINS ONCE PLUGGED IN
-        if (i == 0){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 1){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 2){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 3){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 4){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 5){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 6){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 7){
-            poke_user(GPIOA, GPIO_PIN_15, range);
-        }
-        else if (i == 8){
-            poke_user(GPIOA, GPIO_PIN_15, range);
+        if (i < 9){
+            poke_user(Servo_Trig[i], Servp_Trig_Pin[i], range);
         }
     }
 }
