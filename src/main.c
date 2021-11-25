@@ -3,7 +3,6 @@
 
 #include "ece198.h"
 #include "timer_config.h"
-
 // if return 1 - no obstacle, if return 0 - error, if return other - good read
 #include "ultra_config.h"
 #include "servo_config.h"
@@ -80,62 +79,29 @@ int main(void)
         HAL_Delay(2000);
     }*/
     
+    GPIO_TypeDef *Trigs[9] = {GPIOC, GPIOC, GPIOA, GPIOC, GPIOD, GPIOA, GPIOC, GPIOA, GPIOB};
+    GPIO_TypeDef *Echos[9] = {GPIOC, GPIOC, GPIOH, GPIOC, GPIOC, GPIOA, GPIOH, GPIOC, GPIOB};
+    uint16_t Trig_Pins[9] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_4, GPIO_PIN_10, GPIO_PIN_2, GPIO_PIN_13, GPIO_PIN_15, GPIO_PIN_15, GPIO_PIN_13};
+    uint16_t Echo_Pins[9] = {GPIO_PIN_3, GPIO_PIN_2, GPIO_PIN_1, GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_14, GPIO_PIN_0, GPIO_PIN_14, GPIO_PIN_5};
+
     uint16_t i = 0;
 
     while (true){
-        if (i == 0){
-            uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_0, GPIO_PIN_3);
+        if (i != 8){
+            uint16_t ranged = find_range(Trigs[i], Echos[i], Trig_Pins[i], Echo_Pins[i]);
             debug_poke(i, ranged);
             ++i;
             char err1[1000];
             sprintf(err1, "First \n");
             SerialPuts(err1);
         }
-        else if (i == 1){
-            uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_1, GPIO_PIN_2);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 2){
-            uint16_t ranged = find_range(GPIOA, GPIOH, GPIO_PIN_4, GPIO_PIN_1);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 3){
-            uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_10, GPIO_PIN_11);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 4){
-            uint16_t ranged = find_range(GPIOD, GPIOC, GPIO_PIN_2, GPIO_PIN_12);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 5){
-            uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_13, GPIO_PIN_14);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 6){
-            uint16_t ranged = find_range(GPIOC, GPIOH, GPIO_PIN_15, GPIO_PIN_0);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 7){
-            uint16_t ranged = find_range(GPIOA, GPIOC, GPIO_PIN_15, GPIO_PIN_14);
-            debug_poke(i, ranged);
-            ++i;
-        }
-        else if (i == 8){
-            uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5);
-            debug_poke(i, ranged);
+        if (i == 8){
             i = 0;
             char err1[1000];
             sprintf(err1, "Last \n");
             SerialPuts(err1);
         }        
     }
-    
 #endif
     return 0;
 }
