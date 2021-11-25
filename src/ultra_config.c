@@ -34,15 +34,17 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
     }
     if(started == true){
         if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
+            /*
             char try2[100];
             sprintf(try2, "Noise: %u \n", read_len);
-            SerialPuts(try2);
+            SerialPuts(try2);*/
             return 0;
         }
         else if ((read_len > 37500) && (read_len < 38500)){
+            /*
             char try3[100];
             sprintf(try3, "No Obstacle \n");
-            SerialPuts(try3);
+            SerialPuts(try3);*/
             return 1;
         }
         else if ((read_len > 149) && (read_len < 25001)){
@@ -50,9 +52,11 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
             uint16_t rng = rang;
             
             if (rng > 400){
+                /*
                 char try5[1000];
                 sprintf(try5, "Too Far! \n");
                 SerialPuts(try5);
+                */
                 return 0;
             }
 
