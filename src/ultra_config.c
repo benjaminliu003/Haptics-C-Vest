@@ -4,7 +4,6 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_ECHO, uint16_t Pin_Trig, uint16_t Pin_Echo){
     #define SEN_TRIG Pin_Trig

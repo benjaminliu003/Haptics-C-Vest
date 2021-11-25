@@ -4,7 +4,6 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 void poke_user(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t dist_got){
     #define SER_PORT Port_Letter
