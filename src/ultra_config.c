@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+//Find range using ultra-sonic sensor based on pinout
 uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_ECHO, uint16_t Pin_Trig, uint16_t Pin_Echo){
     #define SEN_TRIG Pin_Trig
     #define SEN_ECHO Pin_Echo
@@ -27,7 +28,7 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
         char try2[100];
         sprintf(try2, "Empty \n");
         SerialPuts(try2);
-    }      //32613?
+    }
     while (HAL_GPIO_ReadPin(Port_Letter_ECHO, SEN_ECHO)){
         if (started == false){
             TIM4->CNT = 0;
@@ -39,23 +40,32 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
         SerialPuts(try2);
     }
     
+    //Analyze Data Reading
     if(started == true){
+
+        //Filter out noise (incredibly long or short range or preset non-existant value)
         if ((read_len < 150) || ((read_len < 37500) && (read_len > 25000)) || (read_len > 38500)){
             char try2[100];
             sprintf(try2, "Noise: %u \n", read_len);
             SerialPuts(try2);
             return 0;
         }
+
+        //Check if no obstactle is being detected
         else if ((read_len > 37500) && (read_len < 38500)){
             char try3[100];
             sprintf(try3, "No Obstacle \n");
             SerialPuts(try3);
             return 1;
         }
+
+        //Obstance is within range, now calculate distance
         else if ((read_len > 149) && (read_len < 25001)){
+            // Constant found to find distance via manual testing / approxmation of linear formula
             double rang = (read_len * 3.43) / 34.3;
             uint16_t rng = rang;
             
+            // Sensors have a max reading of 4m, anything above this range is disregarded
             if (rng > 400){
                 
                 char try5[1000];
@@ -69,7 +79,7 @@ uint16_t find_range(GPIO_TypeDef *Port_Letter_TRIG, GPIO_TypeDef *Port_Letter_EC
             sprintf(try4, "Range of: %u cm \n", rng);
             SerialPuts(try4);
             return rng;
-        }  // set up system to compare current and last measrement, if change drastic, ignore.
+        }
         return 0;
     }
     return 0;

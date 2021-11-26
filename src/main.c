@@ -1,13 +1,12 @@
+//First, we have to include the prerequisites of the program.
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 
+//We will also include files containing our support functions and other code
 #include "ece198.h"
 #include "timer_config.h"
-
-// if return 1 - no obstacle, if return 0 - error, if return other - good read
 #include "ultra_config.h"
-//#include "servo_config.h"
 
 #define RUNTIME
 
@@ -22,7 +21,9 @@ void debug_poke (uint16_t i, uint16_t range){
         sprintf(wut, "NO OBSTACLE \n");
         SerialPuts(wut);
     }
-    else{ //REMEBER TO PUT IN NEW PINS ONCE PLUGGED IN
+    else{
+
+        //PWM statements provided by Bernie Roehl
         if (i == 0){
             double to_set = (range * (-150.0/397.0)) + 500.0;
             int32_t set_this = to_set;
@@ -34,8 +35,7 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_4);
             InitializePin(GPIOC, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_4, set_this);
-            
-            //servo_TIM3(GPIOC, GPIO_PIN_9, TIM_CHANNEL_4, range); //timer 3 channel 4
+
         }
         else if (i == 1){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -49,7 +49,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOC, GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_3, set_this);
 
-            // poke_user(GPIOC, GPIO_PIN_8, range, 3, TIM_CHANNEL_3); //timer 3 channel 3
         }
         else if (i == 2){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -63,7 +62,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
 
-            // poke_user(GPIOB, GPIO_PIN_3, range, 2, TIM_CHANNEL_2); //timer 2 channel 2
         }
         else if (i == 3){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -77,7 +75,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOC, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
 
-            // poke_user(GPIOC, GPIO_PIN_6, range, 3, TIM_CHANNEL_1); //timer 3 channel 1
         }
         else if (i == 4){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -91,7 +88,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOA, GPIO_PIN_1, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
 
-            // poke_user(GPIOA, GPIO_PIN_1, range, 2, TIM_CHANNEL_2); //timer 2 channel 2
         }
         else if (i == 5){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -105,7 +101,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOC, GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
 
-            // poke_user(GPIOC, GPIO_PIN_7, range, 3, TIM_CHANNEL_2); //timer 3 channel 2
         }
         else if (i == 6){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -119,7 +114,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOA, GPIO_PIN_15, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
 
-            // poke_user(GPIOA, GPIO_PIN_15, range, 2, TIM_CHANNEL_1); //timer 2 channel 1
         }
         else if (i == 7){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -133,7 +127,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
 
-            // poke_user(GPIOA, GPIO_PIN_5, range, 2, TIM_CHANNEL_1); // Timer 2 channel 1
         }
         else if (i == 8){
             double to_set = (range * (-150.0/397.0)) + 500.0;
@@ -147,7 +140,6 @@ void debug_poke (uint16_t i, uint16_t range){
             InitializePin(GPIOA, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
             SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
 
-            // poke_user(GPIOA, GPIO_PIN_6, range, 3, TIM_CHANNEL_1); //Timer 3 channel 1
         }
     }
 }
@@ -181,26 +173,6 @@ int main(void)
 
 #ifdef RUNTIME
     
-    /*while (true){
-        TIM2->CCR1 = 350; //lowest range
-        HAL_Delay(2000);
-        TIM2->CCR1 = 500; //highest range
-        HAL_Delay(2000);
-    }*/
-    
-    /*
-    while (true)
-    {
-        //uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_0, GPIO_PIN_3); // SEN 1 WORKS
-        //uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_1, GPIO_PIN_2); // SEN 2 WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOH, GPIO_PIN_4, GPIO_PIN_1); // SEN 3 WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_11, GPIO_PIN_6); // SEN 4 REPIN
-        //uint16_t ranged = find_range(GPIOB, GPIOA, GPIO_PIN_1, GPIO_PIN_8); //SEN 5 WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_13, GPIO_PIN_14); //SEN 7 WORKS
-        //uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_15, GPIO_PIN_10); //SEN 8, WORKS
-        //uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_12, GPIO_PIN_5); // THIS IS SEN6, WORKS
-        //uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5); //SEN 9, WORKS
-    }*/
     
     uint16_t i = 0;
 
