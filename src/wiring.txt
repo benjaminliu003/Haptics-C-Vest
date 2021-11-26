@@ -2,7 +2,7 @@ Trig pins on right, echo on left on board
 pa_13 is trig, pa_14 is echo - SEN 6
 pa_15 is trig, pc_14 is echo - SEN 7
 pc_15 is trig, ph_0 is echo - SEN 8
-pb_5 is trig, pb_13 is echo - SEN 9
+pb_13 is trig, pb_5 is echo - SEN 9
 pc_0 to pc_3 - SEN 1
 pc_1 to pc_2 - SEN 2
 pa_4 to ph_1 - SEN 3

@@ -10,12 +10,42 @@ void start_TIM4() {
   TIM4->CNT = 0;
 }
 
-void start_TIM2() {
+void start_TIM2(uint16_t channel) {
   uint16_t period = 20000, prescale = 84;
   __TIM2_CLK_ENABLE();  // enable timer 2
   TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
   InitializePWMTimer(&pwmTimerInstance, TIM2, period, prescale);   // initialize the timer instance
-  InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
+  if (channel == 1){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
+  }
+  else if (channel == 2){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_2);
+  }
+  else if (channel == 3){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_3);
+  }
+  else if (channel == 4){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_4);
+  }
+}
+
+void start_TIM3(uint16_t channel) {
+  uint16_t period = 20000, prescale = 84;
+  __TIM3_CLK_ENABLE();  // enable timer 2
+  TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
+  InitializePWMTimer(&pwmTimerInstance, TIM3, period, prescale);   // initialize the timer instance
+  if (channel == 1){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
+  }
+  else if (channel == 2){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_2);
+  }
+  else if (channel == 3){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_3);
+  }
+  else if (channel == 4){
+    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_4);
+  }
 }
 
 uint16_t read_TIM4() {
