@@ -1,0 +1,37 @@
+#include "servo_config.h"
+#include "timer_config.h"
+#include "ece198.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+
+void poke_user(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint16_t dist_got, uint16_t timer_num, uint32_t channel){
+    #define SER_PORT Port_Letter
+    #define SER_TRIG Pin_Trig
+
+    TIM_HandleTypeDef pwmTimerInstance3;
+    TIM_HandleTypeDef pwmTimerInstance4;
+
+    if (timer_num == 2){
+        //pwmTimerInstance3 = start_TIM2(channel);
+        InitializePin(SER_PORT, SER_TRIG, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+    }
+    else if (timer_num == 3){
+        //pwmTimerInstance4 = start_TIM3(channel);
+        InitializePin(SER_PORT, SER_TRIG, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+    }
+
+    double to_set = (dist_got * (-150.0/397.0)) + 500.0;
+    int16_t set_this = to_set;
+
+    if (timer_num == 2){
+        SetPWMDutyCycle(&pwmTimerInstance3, channel, set_this);
+    }
+    else{
+        SetPWMDutyCycle(&pwmTimerInstance4, channel, set_this);
+    }
+
+    HAL_Delay(100);
+
+    HAL_GPIO_DeInit(SER_PORT, SER_TRIG);
+}

@@ -10,50 +10,34 @@ void start_TIM4() {
   TIM4->CNT = 0;
 }
 
-void start_TIM2(uint16_t channel) {
+void servo_TIM2(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint32_t channel, uint16_t range) {
+  double to_set = (range * (-150.0/397.0)) + 500.0;
+  int32_t set_this = to_set;
+
   uint16_t period = 20000, prescale = 84;
-  __TIM2_CLK_ENABLE();  // enable timer 2
-  TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
-  InitializePWMTimer(&pwmTimerInstance, TIM2, period, prescale);   // initialize the timer instance
-  if (channel == 1){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
-  }
-  else if (channel == 2){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_2);
-  }
-  else if (channel == 3){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_3);
-  }
-  else if (channel == 4){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_4);
-  }
+  __TIM3_CLK_ENABLE();  // enable timer 3
+  TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+  InitializePWMTimer(&pwmTimerInstance2, TIM2, period, prescale);   // initialize the timer instance
+  InitializePWMChannel(&pwmTimerInstance2, channel);
+  InitializePin(Port_Letter, Pin_Trig, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+  SetPWMDutyCycle(&pwmTimerInstance2, channel, set_this);
 }
 
-void start_TIM3(uint16_t channel) {
+void servo_TIM3(GPIO_TypeDef *Port_Letter, uint16_t Pin_Trig, uint32_t channel, uint16_t range) {
+  double to_set = (range * (-150.0/397.0)) + 500.0;
+  int32_t set_this = to_set;
+
   uint16_t period = 20000, prescale = 84;
-  __TIM3_CLK_ENABLE();  // enable timer 2
-  TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
-  InitializePWMTimer(&pwmTimerInstance, TIM3, period, prescale);   // initialize the timer instance
-  if (channel == 1){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);
-  }
-  else if (channel == 2){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_2);
-  }
-  else if (channel == 3){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_3);
-  }
-  else if (channel == 4){
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_4);
-  }
+  __TIM3_CLK_ENABLE();  // enable timer 3
+  TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+  InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+  InitializePWMChannel(&pwmTimerInstance2, channel);
+  InitializePin(Port_Letter, Pin_Trig, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+  SetPWMDutyCycle(&pwmTimerInstance2, channel, set_this);
 }
 
 uint16_t read_TIM4() {
   return TIM4->CNT;
-}
-
-uint16_t read_TIM2() {
-  return TIM2->CNT;
 }
 
 void delay_us (uint16_t micros) {

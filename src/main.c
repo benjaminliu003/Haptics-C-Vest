@@ -7,14 +7,14 @@
 
 // if return 1 - no obstacle, if return 0 - error, if return other - good read
 #include "ultra_config.h"
-#include "servo_config.h"
+//#include "servo_config.h"
 
 #define RUNTIME
 
 void debug_poke (uint16_t i, uint16_t range){
     if (range == 0){
             char err1[1000];
-            sprintf(err1, "READ ERROR \n");
+            sprintf(err1, "BAD READ \n");
             SerialPuts(err1);
     }
     else if (range == 1){
@@ -24,31 +24,130 @@ void debug_poke (uint16_t i, uint16_t range){
     }
     else{ //REMEBER TO PUT IN NEW PINS ONCE PLUGGED IN
         if (i == 0){
-            poke_user(GPIOC, GPIO_PIN_9, range, 3, 4); //timer 3 channel 4
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM3_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_4);
+            InitializePin(GPIOC, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_4, set_this);
+            
+            //servo_TIM3(GPIOC, GPIO_PIN_9, TIM_CHANNEL_4, range); //timer 3 channel 4
         }
         else if (i == 1){
-            poke_user(GPIOC, GPIO_PIN_8, range, 3, 3); //timer 3 channel 3
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM3_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_3);
+            InitializePin(GPIOC, GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_3, set_this);
+
+            // poke_user(GPIOC, GPIO_PIN_8, range, 3, TIM_CHANNEL_3); //timer 3 channel 3
         }
         else if (i == 2){
-            poke_user(GPIOB, GPIO_PIN_3, range, 2, 2); //timer 2 channel 2
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM2_CLK_ENABLE();  // enable timer 2
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM2, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_2);
+            InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
+
+            // poke_user(GPIOB, GPIO_PIN_3, range, 2, TIM_CHANNEL_2); //timer 2 channel 2
         }
         else if (i == 3){
-            poke_user(GPIOC, GPIO_PIN_6, range, 3, 1); //timer 3 channel 1
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM3_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_1);
+            InitializePin(GPIOC, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
+
+            // poke_user(GPIOC, GPIO_PIN_6, range, 3, TIM_CHANNEL_1); //timer 3 channel 1
         }
         else if (i == 4){
-            poke_user(GPIOA, GPIO_PIN_1, range, 2, 2); //timer 2 channel 2
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM2_CLK_ENABLE();  // enable timer 2
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM2, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_2);
+            InitializePin(GPIOA, GPIO_PIN_1, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
+
+            // poke_user(GPIOA, GPIO_PIN_1, range, 2, TIM_CHANNEL_2); //timer 2 channel 2
         }
         else if (i == 5){
-            poke_user(GPIOC, GPIO_PIN_7, range, 3, 2); //timer 3 channel 2
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM3_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_2);
+            InitializePin(GPIOC, GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_2, set_this);
+
+            // poke_user(GPIOC, GPIO_PIN_7, range, 3, TIM_CHANNEL_2); //timer 3 channel 2
         }
         else if (i == 6){
-            poke_user(GPIOA, GPIO_PIN_15, range, 2, 1); //timer 2 channel 1
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM2_CLK_ENABLE();  // enable timer 2
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM2, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_1);
+            InitializePin(GPIOA, GPIO_PIN_15, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
+
+            // poke_user(GPIOA, GPIO_PIN_15, range, 2, TIM_CHANNEL_1); //timer 2 channel 1
         }
         else if (i == 7){
-            poke_user(GPIOA, GPIO_PIN_5, range, 2, 1); // Timer 2 channel 1
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM2_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM2, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_1);
+            InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
+
+            // poke_user(GPIOA, GPIO_PIN_5, range, 2, TIM_CHANNEL_1); // Timer 2 channel 1
         }
         else if (i == 8){
-            poke_user(GPIOA, GPIO_PIN_6, range, 3, 1); //Timer 3 channel 1
+            double to_set = (range * (-150.0/397.0)) + 500.0;
+            int32_t set_this = to_set;
+
+            uint16_t period = 20000, prescale = 84;
+            __TIM3_CLK_ENABLE();  // enable timer 3
+            TIM_HandleTypeDef pwmTimerInstance2;  // this variable stores an instance of the timer
+            InitializePWMTimer(&pwmTimerInstance2, TIM3, period, prescale);   // initialize the timer instance
+            InitializePWMChannel(&pwmTimerInstance2, TIM_CHANNEL_1);
+            InitializePin(GPIOA, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF2_TIM3);
+            SetPWMDutyCycle(&pwmTimerInstance2, TIM_CHANNEL_1, set_this);
+
+            // poke_user(GPIOA, GPIO_PIN_6, range, 3, TIM_CHANNEL_1); //Timer 3 channel 1
         }
     }
 }
@@ -103,60 +202,80 @@ int main(void)
         //uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5); //SEN 9, WORKS
     }*/
     
-    
     uint16_t i = 0;
 
     while (true){
         if (i == 0){
             uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_0, GPIO_PIN_3);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
-            // char err1[1000];
-            // sprintf(err1, "First \n");
-            // SerialPuts(err1);
+            char err1[1000];
+            sprintf(err1, "First \n");
+            SerialPuts(err1);
         }
         else if (i == 1){
             uint16_t ranged = find_range(GPIOC, GPIOC, GPIO_PIN_1, GPIO_PIN_2);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Second \n");
+            SerialPuts(err1);
         }
         else if (i == 2){
             uint16_t ranged = find_range(GPIOA, GPIOH, GPIO_PIN_4, GPIO_PIN_1);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Third \n");
+            SerialPuts(err1);
         }
         else if (i == 3){
             uint16_t ranged = find_range(GPIOB, GPIOA, GPIO_PIN_12, GPIO_PIN_7);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Fourth \n");
+            SerialPuts(err1);
         }
         else if (i == 4){
             uint16_t ranged = find_range(GPIOB, GPIOA, GPIO_PIN_1, GPIO_PIN_8);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Fifth \n");
+            SerialPuts(err1);
         }
         else if (i == 5){
             uint16_t ranged = find_range(GPIOC, GPIOB, GPIO_PIN_5, GPIO_PIN_9);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Sixth \n");
+            SerialPuts(err1);
         }
         else if (i == 6){
             uint16_t ranged = find_range(GPIOA, GPIOA, GPIO_PIN_13, GPIO_PIN_14);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Seventh \n");
+            SerialPuts(err1);
         }
         else if (i == 7){
             uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_15, GPIO_PIN_10);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             ++i;
+            char err1[1000];
+            sprintf(err1, "Eigth \n");
+            SerialPuts(err1);
         }
         else if (i == 8){
             uint16_t ranged = find_range(GPIOB, GPIOB, GPIO_PIN_13, GPIO_PIN_5);
-            // debug_poke(i, ranged);
+            debug_poke(i, ranged);
             i = 0;
-            // char err1[1000];
-            // sprintf(err1, "Last \n");
-            // SerialPuts(err1);
+            char err1[1000];
+            sprintf(err1, "Last \n");
+            SerialPuts(err1);
         }        
     }
 #endif
